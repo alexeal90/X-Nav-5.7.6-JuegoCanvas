@@ -34,13 +34,41 @@ princessImage.onload = function () {
 };
 princessImage.src = "images/princess.png";
 
+// stone image
+var stoneReady = false;
+var stoneImage = new Image();
+stoneImage.onload = function () {
+	stoneReady = true;
+};
+stoneImage.src = "images/stone.png";
+
+// monster image
+var monsterReady = false;
+var monsterImage = new Image();
+monsterImage.onload = function () {
+	monsterReady = true;
+};
+monsterImage.src = "images/monster.png";
+
 // Game objects
 var hero = {
 	speed: 256 // movement in pixels per second
 };
+var monsterSpeed = 100;
 var princess = {};
+var stone0 = {};
+var stone1 = {};
+var monster0 = {
+	speed: monsterSpeed // movement in pixels per second
+};
+var monster1 = {
+	speed: monsterSpeed // movement in pixels per second
+};
+var monster2 = {
+	speed: monsterSpeed // movement in pixels per second
+};
 var princessesCaught = 0;
-
+var level = 1;
 // Handle keyboard controls
 var keysDown = {};
 
@@ -52,14 +80,131 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
 
+function areTheyTouching (obj1, obj2){
+	if (obj1.x <= (obj2.x + 32)
+		&& obj2.x <= (obj1.x + 32)
+		&& obj1.y <= (obj2.y + 32)
+		&& obj2.y <= (obj1.y + 32)){
+			return true;
+		}else{
+			return false;
+		}
+};
+
+function touchLimit (obj){
+	if(obj.x <= 0 +16){
+		obj.x += 10;
+	}else if(obj.x >= canvas.width - 50){
+		obj.x -= 10;
+	}else if(obj.y <= 0 + 16){
+		obj.y += 10;
+	}else if(obj.y >= canvas.height - 50){
+		obj.y -= 10;
+	};
+}
+
 // Reset the game when the player catches a princess
 var reset = function () {
 	hero.x = canvas.width / 2;
 	hero.y = canvas.height / 2;
 
 	// Throw the princess somewhere on the screen randomly
-	princess.x = 32 + (Math.random() * (canvas.width - 64));
-	princess.y = 32 + (Math.random() * (canvas.height - 64));
+	princess.x = 32 + (Math.random() * (canvas.width - 90));
+	princess.y = 32 + (Math.random() * (canvas.height - 98));
+
+	if (princessesCaught>=(level*10)){
+			level++;
+			monsterSpeed += 25;
+	};
+
+	ready = false;
+
+	if (level == 1){
+		// Si alguno de los objetos se solapan se vuelve a generar
+		while (ready == false){
+			   monster0.x = 32 + (Math.random() * (canvas.width - 90));
+			   monster0.y = 32 + (Math.random() * (canvas.height - 98));
+				 stone0.x = 32 + (Math.random() * (canvas.width - 90));
+			   stone0.y = 32 + (Math.random() * (canvas.height - 98));
+			   if(!areTheyTouching(princess,stone0)
+					&& !areTheyTouching(princess,monster0)
+			    && !areTheyTouching(monster0,stone0)){
+						ready = true;
+			   }
+		}
+	}else if (level == 2){
+		while (ready == false){
+			   monster0.x = 32 + (Math.random() * (canvas.width - 90));
+			   monster0.y = 32 + (Math.random() * (canvas.height - 98));
+				 monster1.x = 32 + (Math.random() * (canvas.width - 90));
+			   monster1.y = 32 + (Math.random() * (canvas.height - 98));
+				 stone0.x = 32 + (Math.random() * (canvas.width - 90));
+			   stone0.y = 32 + (Math.random() * (canvas.height - 98));
+			   if(!areTheyTouching(princess,stone0)
+					&& !areTheyTouching(princess,monster0)
+			    && !areTheyTouching(monster0,stone0)
+					&& !areTheyTouching(princess,monster1)
+ 					&& !areTheyTouching(monster1,stone0)
+ 			    && !areTheyTouching(monster0,monster1)){
+						ready = true;
+			   }
+		}
+	}else if (level == 3){
+		while (ready == false){
+			   monster0.x = 32 + (Math.random() * (canvas.width - 90));
+			   monster0.y = 32 + (Math.random() * (canvas.height - 98));
+				 monster1.x = 32 + (Math.random() * (canvas.width - 90));
+			   monster1.y = 32 + (Math.random() * (canvas.height - 98));
+				 stone0.x = 32 + (Math.random() * (canvas.width - 90));
+			   stone0.y = 32 + (Math.random() * (canvas.height - 98));
+				 stone1.x = 32 + (Math.random() * (canvas.width - 90));
+			   stone1.y = 32 + (Math.random() * (canvas.height - 98));
+			   if(!areTheyTouching(princess,stone0)
+					&& !areTheyTouching(princess,monster0)
+			    && !areTheyTouching(princess,stone1)
+					&& !areTheyTouching(princess,monster1)
+ 					&& !areTheyTouching(stone0,monster0)
+ 			    && !areTheyTouching(stone0,monster1)
+					&& !areTheyTouching(stone0,stone1)
+					&& !areTheyTouching(stone1,monster0)
+ 			    && !areTheyTouching(stone1,monster1)
+					&& !areTheyTouching(monster0,monster1)
+				){
+						ready = true;
+			   }
+		}
+	}else{
+		while (ready == false){
+			   monster0.x = 32 + (Math.random() * (canvas.width - 90));
+			   monster0.y = 32 + (Math.random() * (canvas.height - 98));
+				 monster1.x = 32 + (Math.random() * (canvas.width - 90));
+			   monster1.y = 32 + (Math.random() * (canvas.height - 98));
+				 monster2.x = 32 + (Math.random() * (canvas.width - 90));
+				 monster2.y = 32 + (Math.random() * (canvas.height - 98));
+				 stone0.x = 32 + (Math.random() * (canvas.width - 90));
+			   stone0.y = 32 + (Math.random() * (canvas.height - 98));
+				 stone1.x = 32 + (Math.random() * (canvas.width - 90));
+			   stone1.y = 32 + (Math.random() * (canvas.height - 98));
+			   if(!areTheyTouching(princess,stone0)
+					&& !areTheyTouching(princess,monster0)
+			    && !areTheyTouching(princess,stone1)
+					&& !areTheyTouching(princess,monster1)
+					&& !areTheyTouching(princess,monster2)
+ 					&& !areTheyTouching(stone0,monster0)
+ 			    && !areTheyTouching(stone0,monster1)
+					&& !areTheyTouching(stone0,monster2)
+					&& !areTheyTouching(stone0,stone1)
+					&& !areTheyTouching(stone1,monster0)
+ 			    && !areTheyTouching(stone1,monster1)
+					&& !areTheyTouching(stone0,monster2)
+					&& !areTheyTouching(monster0,monster1)
+					&& !areTheyTouching(monster0,monster2)
+					&& !areTheyTouching(monster1,monster2)
+				){
+						ready = true;
+			   }
+		}
+	}
 };
 
 // Update game objects
@@ -79,14 +224,53 @@ var update = function (modifier) {
 
 	// Are they touching?
 	if (
-		hero.x <= (princess.x + 16)
-		&& princess.x <= (hero.x + 16)
-		&& hero.y <= (princess.y + 16)
-		&& princess.y <= (hero.y + 32)
+		areTheyTouching(hero,princess)
 	) {
 		++princessesCaught;
 		reset();
 	}
+
+
+	function touchStone(stone){
+		if (
+			areTheyTouching(hero,stone)
+	                && 40 in keysDown ||
+			areTheyTouching(hero,stone)
+	                && 39 in keysDown
+
+		) {
+			hero.x -= 1;
+			hero.y -= 1;
+		}
+
+		if (
+			areTheyTouching(hero,stone)
+	                && 38 in keysDown ||
+			areTheyTouching(hero,stone)
+	                && 37 in keysDown
+
+		) {
+			hero.x += 1;
+			hero.y += 1;
+		}
+	}
+
+	function touchMonst(monster){
+		if(areTheyTouching(hero,monster)
+		) {
+			reset();
+		}
+	}
+
+	touchStone(stone0);
+	touchStone(stone1);
+	touchMonst(monster0);
+	touchMonst(monster1);
+	touchMonst(monster2);
+	touchLimit(hero);
+	touchLimit(monster0);
+	touchLimit(monster1);
+	touchLimit(monster2);
 };
 
 // Draw everything
@@ -103,12 +287,33 @@ var render = function () {
 		ctx.drawImage(princessImage, princess.x, princess.y);
 	}
 
+	if (stoneReady){
+		ctx.drawImage(stoneImage, stone0.x, stone0.y);
+	}
+
+	if (stoneReady){
+		ctx.drawImage(stoneImage, stone1.x, stone1.y);
+	}
+
+	if (monsterReady){
+		ctx.drawImage(monsterImage, monster0.x, monster0.y);
+	}
+
+	if (monsterReady){
+		ctx.drawImage(monsterImage, monster1.x, monster1.y);
+	}
+
+	if (monsterReady){
+		ctx.drawImage(monsterImage, monster2.x, monster2.y);
+	}
+
+
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Princesses caught: " + princessesCaught, 32, 32);
+	ctx.fillText("Princesses caught: " + princessesCaught + " level: " + level, 32, 32);
 };
 
 // The main game loop
