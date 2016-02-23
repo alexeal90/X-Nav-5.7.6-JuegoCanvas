@@ -116,9 +116,9 @@ function touchLeft (obj){
 	};
 }
 
-/*function mover (monst){
-	
-}*/
+//function monsMove (monst){
+	//if
+//}
 
 // Reset the game when the player catches a princess
 var reset = function () {
