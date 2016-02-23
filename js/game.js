@@ -71,7 +71,8 @@ var princessesCaught = 0;
 var level = 1;
 // Handle keyboard controls
 var keysDown = {};
-
+//var stones[];
+//var monsters[];
 addEventListener("keydown", function (e) {
 	keysDown[e.keyCode] = true;
 }, false);
@@ -91,17 +92,33 @@ function areTheyTouching (obj1, obj2){
 		}
 };
 
-function touchLimit (obj){
-	if(obj.x <= 0 +16){
-		obj.x += 10;
-	}else if(obj.x >= canvas.width - 50){
-		obj.x -= 10;
-	}else if(obj.y <= 0 + 16){
-		obj.y += 10;
-	}else if(obj.y >= canvas.height - 50){
-		obj.y -= 10;
+function touchUp (obj){
+	if (obj.y <= 0 + 32){
+		return true;
 	};
 }
+
+function touchBottom (obj){
+	if (obj.y >= 480 - 65){
+		return true;
+	};
+}
+
+function touchRight (obj){
+	if (obj.x >= 512 - 65){
+		return true;
+	};
+}
+
+function touchLeft (obj){
+	if (obj.x <= 0 + 32){
+		return true;
+	};
+}
+
+/*function mover (monst){
+	
+}*/
 
 // Reset the game when the player catches a princess
 var reset = function () {
@@ -210,16 +227,52 @@ var reset = function () {
 // Update game objects
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
-		hero.y -= hero.speed * modifier;
+		if (!touchUp(hero)){	
+			hero.y -= hero.speed * modifier;
+		}	
+		/*if (level >= 4){
+			mover(monster2);
+		}else if (level >= 2){
+			mover(monster1);
+		}else{
+			mover(monster0);
+		}*/
 	}
 	if (40 in keysDown) { // Player holding down
-		hero.y += hero.speed * modifier;
+		if (!touchBottom(hero)){	
+			hero.y += hero.speed * modifier;
+		}
+		/*if (level >= 4){
+			mover(monster2);
+		}else if (level >= 2){
+			mover(monster1);
+		}else{
+			mover(monster0);
+		}*/
 	}
 	if (37 in keysDown) { // Player holding left
-		hero.x -= hero.speed * modifier;
+		if (!touchLeft(hero)){
+			hero.x -= hero.speed * modifier;
+		}
+		/*if (level >= 4){
+			mover(monster2);
+		}else if (level >= 2){
+			mover(monster1);
+		}else{
+			mover(monster0);
+		}*/
 	}
 	if (39 in keysDown) { // Player holding right
-		hero.x += hero.speed * modifier;
+		if (!touchRight(hero)){
+			hero.x += hero.speed * modifier;
+		}
+		/*if (level >= 4){
+			mover(monster2);
+		}else if (level >= 2){
+			mover(monster1);
+		}else{
+			mover(monster0);
+		}*/
 	}
 
 	// Are they touching?
@@ -267,10 +320,10 @@ var update = function (modifier) {
 	touchMonst(monster0);
 	touchMonst(monster1);
 	touchMonst(monster2);
-	touchLimit(hero);
-	touchLimit(monster0);
-	touchLimit(monster1);
-	touchLimit(monster2);
+	//touchLimit(hero);
+	//touchLimit(monster0);
+	//touchLimit(monster1);
+	//touchLimit(monster2);
 };
 
 // Draw everything
